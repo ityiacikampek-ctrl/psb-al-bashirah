@@ -18,9 +18,11 @@
         "name": "next"
       }
     ],
+    "baseUrl": "src",
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": ["*"]
+    },
+    "types": ["next-auth"]
   },
   "include": [
     "next-env.d.ts",
