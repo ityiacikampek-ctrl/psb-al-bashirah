@@ -2,14 +2,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import StudentForm from "@/components/StudentForm";
 import { Student } from "@/types/student";
 
 export default function StudentDetail() {
   const params = useParams();
+  const router = useRouter();
   const [student, setStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function fetchStudent() {
@@ -17,95 +19,124 @@ export default function StudentDetail() {
         const response = await fetch("/api/students");
         const allStudents = await response.json();
 
-        if (allStudents.length > 1) {
-          const headers = allStudents[0];
-          const studentData = allStudents[Number(params.id) + 1];
+        console.log("📊 TOTAL DATA DI API:", allStudents.length);
+        console.log("🎯 PARAMS ID:", params.id);
 
-          // Mapping data dari Google Sheets ke interface Student
-          // Dalam useEffect fetchStudent, ganti mapping dengan ini:
+        if (allStudents.length > 0) {
+          const studentIndex = Number(params.id);
+
+          // Validasi: pastikan index valid
+          // Sekarang tidak perlu +1 karena tidak ada header
+          if (
+            isNaN(studentIndex) ||
+            studentIndex < 0 ||
+            studentIndex >= allStudents.length
+          ) {
+            setError(
+              `Data siswa tidak ditemukan. Index: ${studentIndex}, Total data: ${allStudents.length}`
+            );
+            setLoading(false);
+            return;
+          }
+
+          const studentData = allStudents[studentIndex]; // Langsung ambil, tidak perlu +1
+
+          // Validasi: pastikan studentData ada dan merupakan array
+          if (!studentData || !Array.isArray(studentData)) {
+            setError("Data siswa tidak valid");
+            setLoading(false);
+            return;
+          }
+
+          console.log("🎯 DATA YANG DIPROSES:", studentData);
+
+          // Safe mapping dengan default values - SESUAI STRUCTUR DATA BARU
           const studentObj: Student = {
-            // Data Pribadi
+            // Data Pribadi - SESUAI DATA CONTOH
             timestamp: studentData[0] || "",
             alamatEmail: studentData[1] || "",
-            namaLengkap: studentData[2] || "",
-            namaPanggilan: studentData[3] || "",
-            nik: studentData[4] || "",
-            jenisKelamin: studentData[5] || "",
-            tempatLahir: studentData[6] || "",
-            tanggalLahir: studentData[7] || "",
-            kewarganegaraan: studentData[8] || "",
-            anakKe: studentData[9] || "",
-            saudaraKandung: studentData[10] || "",
-            saudaraTiri: studentData[11] || "",
-            saudaraAngkat: studentData[12] || "",
-            bahasa: studentData[13] || "",
-            beratBadan: studentData[14] || "",
-            tinggiBadan: studentData[15] || "",
-            golonganDarah: studentData[16] || "",
-            penyakit: studentData[17] || "",
-            alamat: studentData[18] || "",
-            noTelepon: studentData[19] || "",
-            tinggalDengan: studentData[20] || "",
+            namaLengkap: studentData[4] || "", // Index 4: "ADRIAN GIBRAN EVANO"
+            namaPanggilan: studentData[5] || "", // Index 5: "Evano"
+            nik: studentData[6] || "", // Index 6: "3215250801200003"
+            jenisKelamin: studentData[7] || "", // Index 7: "Laki-laki(Ikhwan)"
+            tempatLahir: studentData[8] || "", // Index 8: "Bekasi"
+            tanggalLahir: studentData[9] || "", // Index 9: "08/01/2020"
+            kewarganegaraan: studentData[10] || "", // Index 10: "WNI (Warga Negara Indonesia)"
+            anakKe: studentData[11] || "", // Index 11: "Satu"
+            saudaraKandung: studentData[12] || "", // Index 12: "2"
+            saudaraTiri: studentData[13] || "", // Index 13: ""
+            saudaraAngkat: studentData[14] || "", // Index 14: ""
+            bahasa: studentData[15] || "", // Index 15: "Indonesia"
+            beratBadan: studentData[16] || "", // Index 16: "18"
+            tinggiBadan: studentData[17] || "", // Index 17: "119"
+            golonganDarah: studentData[18] || "", // Index 18: "O"
+            penyakit: studentData[19] || "", // Index 19: "Pneumonia (history kejang kalau demam)"
+            alamat: studentData[20] || "", // Index 20: "perumahan buana kota baru raya blok C7 no.7"
+            noTelepon: studentData[25] || "", // Index 25: "087870004761"
+            tinggalDengan: studentData[26] || "", // Index 26: "Orang Tua"
 
             // Data Orang Tua
-            namaAyah: studentData[21] || "",
-            tglLahirAyah: studentData[22] || "",
-            pendidikanAyah: studentData[23] || "",
-            pekerjaanAyah: studentData[24] || "",
-            namaIbu: studentData[25] || "",
-            tglLahirIbu: studentData[26] || "",
-            pendidikanIbu: studentData[27] || "",
-            pekerjaanIbu: studentData[28] || "",
+            namaAyah: studentData[27] || "", // Index 27: "Adnan muslimin"
+            tglLahirAyah: studentData[28] || "", // Index 28: "02/06/1992"
+            pendidikanAyah: studentData[29] || "", // Index 29: "Karyawan swasta"
+            pekerjaanAyah: studentData[30] || "", // Index 30: "SMA/Sederajat"
+            namaIbu: studentData[31] || "", // Index 31: "Diah mutiara azebfani"
+            tglLahirIbu: studentData[32] || "", // Index 32: "01/09/1997"
+            pendidikanIbu: studentData[33] || "", // Index 33: "Ibu rumah tangga"
+            pekerjaanIbu: studentData[34] || "", // Index 34: "SMA/Sederajat"
 
             // Data Wali
-            namaWali: studentData[29] || "",
-            pendidikanWali: studentData[30] || "",
-            hubunganDenganAnak: studentData[31] || "",
-            pekerjaanWali: studentData[32] || "",
+            namaWali: studentData[35] || "", // Index 35: "SELANJUTNYA"
+            pendidikanWali: studentData[36] || "", // Index 36: ""
+            hubunganDenganAnak: studentData[37] || "", // Index 37: ""
+            pekerjaanWali: studentData[38] || "", // Index 38: ""
 
             // Asal Sekolah
-            masukSebagai: studentData[33] || "",
-            asalSekolah: studentData[34] || "",
-            tahunLulus: studentData[35] || "",
-            noIjazah: studentData[36] || "",
-            noSkhun: studentData[37] || "",
+            masukSebagai: studentData[41] || "", // Index 41: "Siswa Baru Tingkat 1"
+            asalSekolah: studentData[42] || "", // Index 42: "RA AL IKRAM"
+            tahunLulus: studentData[47] || "", // Index 47: "2026"
+            noIjazah: studentData[43] || "", // Index 43: "Rp. 300.000,-"
+            noSkhun: studentData[44] || "", // Index 44: "https://drive.google.com/..."
 
             // Informasi Tambahan
-            prestasi: studentData[38] || "",
-            hobi: studentData[39] || "",
-            kebutuhanKhusus: studentData[40] || "",
-            informasiDari: studentData[41] || "",
+            prestasi: studentData[45] || "", // Index 45: "https://drive.google.com/..."
+            hobi: studentData[46] || "", // Index 46: "Sudah download"
+            kebutuhanKhusus: studentData[39] || "", // Index 39: ""
+            informasiDari: studentData[40] || "", // Index 40: ""
 
             // Dokumen
-            foto: studentData[42] || "",
-            aktaKelahiran: studentData[43] || "",
-            kartuKeluarga: studentData[44] || "",
-            ktpOrtu: studentData[45] || "",
-            ijazah: studentData[46] || "",
-            skhun: studentData[47] || "",
+            foto: studentData[2] || "", // Index 2: "3209090340"?
+            aktaKelahiran: studentData[3] || "", // Index 3: "SDIT2627-26"?
+            kartuKeluarga: studentData[21] || "", // Index 21: "Pangulah selatan"
+            ktpOrtu: studentData[22] || "", // Index 22: "Kotabaru"
+            ijazah: studentData[23] || "", // Index 23: "Karawang"
+            skhun: studentData[24] || "", // Index 24: "Jawa Barat"
 
-            // Administrasi (jika ada kolom tambahan)
-            noPendaftaran: studentData[48] || "",
-            tanggalDaftar: studentData[49] || "",
-            status: studentData[50] || "",
+            // Administrasi
+            noPendaftaran: studentData[2] || "", // Index 2: "3209090340"?
+            tanggalDaftar: studentData[0] || "", // Index 0: timestamp
+            status: "Calon Siswa",
           };
 
           setStudent(studentObj);
+          console.log("✅ DATA SISWA BERHASIL DIPROSES");
+        } else {
+          setError("Tidak ada data siswa");
         }
       } catch (error) {
         console.error("Error:", error);
+        setError("Terjadi kesalahan saat memuat data");
       } finally {
         setLoading(false);
       }
     }
 
-    fetchStudent();
+    if (params.id) {
+      fetchStudent();
+    }
   }, [params.id]);
 
-  const formatForPDF = (text: string) => {
-    return text.toUpperCase();
-  };
-
+  // ... (kode loading, error, dan return tetap sama)
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -117,17 +148,44 @@ export default function StudentDetail() {
     );
   }
 
-  if (!student) {
+  if (error) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-600">Data siswa tidak ditemukan</p>
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
+            <div className="text-red-600 text-lg font-semibold mb-2">
+              ⚠️ {error}
+            </div>
+            <p className="text-gray-600 mb-4">
+              Data siswa tidak dapat dimuat. Pastikan data tersedia di
+              spreadsheet.
+            </p>
+            <button
+              onClick={() => router.push("/")}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
+              Kembali ke Daftar Siswa
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
-  // Ganti bagian return dengan yang ini:
+  if (!student) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600">Data siswa tidak ditemukan</p>
+          <button
+            onClick={() => router.push("/")}
+            className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
+            Kembali ke Daftar Siswa
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       {/* Tombol Action - Sembunyi saat print */}
@@ -136,13 +194,13 @@ export default function StudentDetail() {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold text-gray-800">
-                {formatForPDF(student.namaLengkap)}
+                {student.namaLengkap?.toUpperCase() || ""}
               </h1>
               <p className="text-gray-600">Detail Calon Siswa</p>
             </div>
             <div className="flex gap-4">
               <button
-                onClick={() => window.history.back()}
+                onClick={() => router.push("/")}
                 className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium">
                 ← Kembali
               </button>
@@ -155,10 +213,12 @@ export default function StudentDetail() {
           </div>
         </div>
       </div>
+
       {/* Formulir - Tampil saat print dan screen */}
       <div className="max-w-4xl mx-auto">
         <StudentForm student={student} />
       </div>
+
       {/* Print Styles */}
       <style jsx global>{`
         @media print {
@@ -169,7 +229,7 @@ export default function StudentDetail() {
 
           @page {
             size: A4;
-            margin: 20mm 5mm 15mm 10mm; /* atas, kanan, bawah, kiri */
+            margin: 20mm 0mm 15mm 0mm; /* atas, kanan, bawah, kiri */
           }
 
           body {

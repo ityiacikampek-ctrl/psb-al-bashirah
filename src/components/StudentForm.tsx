@@ -3,6 +3,7 @@
 
 import { Student } from "@/types/student";
 import Image from "next/image";
+import { AiOutlineBorder } from "react-icons/ai";
 
 interface StudentFormProps {
   student: Student;
@@ -37,7 +38,7 @@ export default function StudentForm({ student }: StudentFormProps) {
       <div className="text-center mb-6 border-b-2 border-black pb-2">
         {/* Logo di samping */}
         <div className="flex justify-center items-start mb-2">
-          <div className="flex items-center justify-center">
+          <div className="flex justify-center">
             {/* Logo */}
             <Image
               src="/logo-sdit.png"
@@ -231,10 +232,10 @@ export default function StudentForm({ student }: StudentFormProps) {
             <span className="w-48 mr-4">Alamat Lengkap</span>
             <span className="flex-1 border-b border-black">
               : {formatRegular(student.alamat)}, Desa{" "}
-              {formatRegular(student.desaKelurahan)}, Kec.{" "}
-              {formatRegular(student.kecamatan)}, Kab.{" "}
-              {formatRegular(student.kabupatenKota)}, Prov.{" "}
-              {formatRegular(student.provinsi)}
+              {formatRegular(student.kartuKeluarga)}, Kec.{" "}
+              {formatRegular(student.ktpOrtu)}, Kab.{" "}
+              {formatRegular(student.ijazah)}, Prov.{" "}
+              {formatRegular(student.skhun)}
             </span>
           </div>
 
@@ -250,7 +251,7 @@ export default function StudentForm({ student }: StudentFormProps) {
           <div className="flex">
             <span className="w-6">20.</span>
             <span className="w-48 mr-4">Bertempat Tinggal Pada</span>
-            <span className="flex-1 border-b border-black uppercase">
+            <span className="flex-1 border-b border-black">
               : {formatRegular(student.tinggalDengan)}
             </span>
           </div>
@@ -284,7 +285,7 @@ export default function StudentForm({ student }: StudentFormProps) {
           <div className="flex">
             <span className="w-8">22.</span>
             <span className="w-40 mr-4">Pendidikan Terakhir</span>
-            <span className="flex-1 border-b border-black uppercase">
+            <span className="flex-1 border-b border-black">
               : {formatRegular(student.pendidikanAyah)}
             </span>
           </div>
@@ -292,7 +293,7 @@ export default function StudentForm({ student }: StudentFormProps) {
           <div className="flex">
             <span className="w-8">23.</span>
             <span className="w-40 mr-4">Pekerjaan Ayah</span>
-            <span className="flex-1 border-b border-black uppercase">
+            <span className="flex-1 border-b border-black">
               : {formatRegular(student.pekerjaanAyah)}
             </span>
           </div>
@@ -317,7 +318,7 @@ export default function StudentForm({ student }: StudentFormProps) {
           <div className="flex">
             <span className="w-8">26.</span>
             <span className="w-40 mr-4">Pendidikan Terakhir</span>
-            <span className="flex-1 border-b border-black uppercase">
+            <span className="flex-1 border-b border-black">
               : {formatRegular(student.pendidikanIbu)}
             </span>
           </div>
@@ -325,12 +326,12 @@ export default function StudentForm({ student }: StudentFormProps) {
           <div className="flex">
             <span className="w-8">27.</span>
             <span className="w-40 mr-4">Pekerjaan Ibu</span>
-            <span className="flex-1 border-b border-black uppercase">
+            <span className="flex-1 border-b border-black">
               : {formatRegular(student.pekerjaanIbu)}
             </span>
           </div>
 
-          {/* Data Wali */}
+          {/* Data Wali
           <div className="flex">
             <span className="w-8">28.</span>
             <span className="w-40 mr-4">Nama Wali Siswa (Jika ada)</span>
@@ -361,7 +362,7 @@ export default function StudentForm({ student }: StudentFormProps) {
             <span className="flex-1 border-b border-black uppercase">
               : {formatRegular(student.pekerjaanWali)}
             </span>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -373,7 +374,7 @@ export default function StudentForm({ student }: StudentFormProps) {
 
         <div className="space-y-2 text-sm">
           <div className="flex">
-            <span className="w-8">32.</span>
+            <span className="w-8">28.</span>
             <span className="w-48 mr-4">Masuk Sekolah Ini Sebagai</span>
             <span className="flex-1 border-b border-black uppercase">
               : {formatRegular(student.sebagai)}
@@ -381,7 +382,7 @@ export default function StudentForm({ student }: StudentFormProps) {
           </div>
 
           <div className="flex">
-            <span className="w-8">33.</span>
+            <span className="w-8">29.</span>
             <span className="w-48 mr-4">Asal Sekolah</span>
             <span className="flex-1 border-b border-black uppercase">
               : {formatRegular(student.asalSekolah)}
@@ -389,7 +390,7 @@ export default function StudentForm({ student }: StudentFormProps) {
           </div>
 
           <div className="flex">
-            <span className="w-8">34.</span>
+            <span className="w-8">30.</span>
             <span className="w-48 mr-4">Tahun Lulus</span>
             <span className="flex-1 border-b border-black">
               : {formatEmpty(student.tahunLulus)}
@@ -398,37 +399,57 @@ export default function StudentForm({ student }: StudentFormProps) {
         </div>
       </div>
 
-      {/* Tanda Tangan & Footer */}
-      <div className="mt-12 text-sm">
-        <div className="flex justify-between mb-8">
-          <div className="text-center">
-            <div className="border-t border-black w-48 mx-auto mb-1"></div>
-            <span>Diterima / Ditolak *</span>
+      <div className="mb-8">
+        <h5 className="font-bold text-sm mb-3 border-b border-black pb-1">
+          C. DITERIMA/DITOLAK :
+        </h5>
+
+        <div className="space-y-2 text-sm">
+          <div className="flex justify-between w-64 mb-4 uppercase">
+            <div>
+              <AiOutlineBorder className="inline-block mr-2" /> Diterima
+            </div>
+            <div>
+              <AiOutlineBorder className="inline-block mr-2" /> Ditolak
+            </div>
           </div>
 
-          <div className="text-center">
-            <div className="border-t border-black w-48 mx-auto mb-1"></div>
-            <span>Orang Tua / Wali *</span>
-          </div>
-        </div>
-
-        <div className="text-center mb-4">
-          <span>
-            Alasan :
-            ..........................................................................
-          </span>
-        </div>
-
-        <div className="text-center">
-          <div className="border-t border-black w-48 mx-auto mb-1"></div>
-          <span>Kepala Sekolah</span>
-          <div className="text-xs font-bold mt-1">
-            Yudin Dindin Cahyudin, S.Pd.
+          <div className="flex mt-5">
+            <p>
+              Alasan :
+              .....................................................................................................................................
+            </p>
           </div>
         </div>
       </div>
 
-      <div className="text-center mt-8 text-xs text-gray-500">
+      {/* Tanda Tangan & Footer */}
+      <div className="mt-15 text-sm">
+        <div className="flex justify-between mb-8">
+          <div>
+            <br />
+            <div className="text-center">
+              <span>Kepala Sekolah</span>
+              <h1 className="py-12 text-gray-300">Tanda Tangan</h1>
+              <div className="border-b border-black mx-auto mb-1 font-bold">
+                Yudin Dindin Cahyudin, S.Pd.
+              </div>
+              <span>NIY : 10-01.15.019</span>
+            </div>
+          </div>
+
+          <div>
+            <h1>Kotabaru, ................................</h1>
+            <div className="text-center">
+              <span>Orang Tua/ Wali *</span>
+              <h1 className="py-12 text-gray-300">Tanda Tangan</h1>
+              <div className="border-b border-black w-48 mx-auto mb-1"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-8 text-xs text-gray-500">
         <p>Catatan :</p>
       </div>
     </div>

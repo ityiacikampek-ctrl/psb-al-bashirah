@@ -15,7 +15,7 @@ export async function getStudents() {
   try {
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: "Form Responses 1!E2:K",
+      range: "Form Responses 1!A2:AV",
     });
 
     console.log("Data fetched:", response.data.values?.length || 0, "rows");
