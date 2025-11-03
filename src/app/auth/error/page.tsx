@@ -4,6 +4,9 @@
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+
+export const dynamic = "force-dynamic";
 
 // Component utama yang pakai useSearchParams
 function ErrorContent() {
@@ -14,8 +17,8 @@ function ErrorContent() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <img
-            src="/logo.png"
+          <Image
+            src="/logo-sdit.png"
             alt="Logo Al Bashirah"
             className="mx-auto h-20 w-auto"
           />
