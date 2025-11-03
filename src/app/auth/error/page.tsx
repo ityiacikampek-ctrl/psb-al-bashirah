@@ -1,10 +1,12 @@
 // src/app/auth/error/page.tsx
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function AuthErrorPage() {
+// Component utama yang pakai useSearchParams
+function ErrorContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
 
@@ -18,7 +20,7 @@ export default function AuthErrorPage() {
             className="mx-auto h-20 w-auto"
           />
           <h2 className="mt-6 text-2xl font-bold text-gray-900">
-            Akses Ditolak
+            {error === "AccessDenied" ? "Akses Ditolak" : "Terjadi Kesalahan"}
           </h2>
           <p className="mt-2 text-sm text-gray-600">
             {error === "AccessDenied"
@@ -41,5 +43,26 @@ export default function AuthErrorPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Loading component untuk suspense fallback
+function ErrorLoading() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+        <p className="mt-4 text-gray-600">Memuat...</p>
+      </div>
+    </div>
+  );
+}
+
+// Main component dengan Suspense boundary
+export default function AuthErrorPage() {
+  return (
+    <Suspense fallback={<ErrorLoading />}>
+      <ErrorContent />
+    </Suspense>
   );
 }
